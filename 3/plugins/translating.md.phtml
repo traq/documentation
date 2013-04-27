@@ -1,0 +1,20 @@
+## Translating Plugins
+
+Translating plugins is simple, everywhere your plugin wants to use a translated string, use `<?php echo l('string_to_translate'); ?>`.
+
+The `string_to_translate` part is usually a short but descriptive identifier, for example, let's say we want to translate the
+string `Welcome to the AdminCP for MyPlugin`, we would use something like `myplugin_admincp_welcome`.
+
+### The translation File
+
+For this example, we'll be creating the English translation file, in your plugins directory (`vendor/traq/plugins/my_plugin`)
+create a directory called `locale`. This directory holds all translation files.
+
+Now create the `enus.php` file and open it. This file returns an array of our translations. Yes, I said "returns".
+
+    // vendor/traq/plugins/my_plugin/locale/enus.php
+    return array(
+        'myplugin_admincp_welcome' => "Welcome to the AdminCP for MyPlugin"
+    );
+
+You don't need to do anything else, it's that simple, Traq handles the loading of plugin translation files.

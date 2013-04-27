@@ -1,0 +1,70 @@
+## Creating A Plugin
+
+### Plugin file setup
+
+Let's make our first plugin, we'll call it "MyPlugin". Because the framework Traq 3.0 uses, all classes and namespaces are converted to underscore format for directory and filenames, so create a directory in `vendor/traq/plugins` called `my_plugin`.
+
+Now we need to make the main plugin file that tells Traq what to do when the plugin is enabled. Inside our plugins directory (`my_plugin`) create a file called `my_plugin.php` and open it in your preferred text editor.
+
+Firstly, we need to setup the namespace and class. The namespace is similar to the directory path of the plugin inside the `vendor` directory with the CamelCased plugin name (`MyPlugin`), better explained with the following example:
+
+    // Our file is located in `vendor/traq/plugins`
+    namespace traq\plugins;
+
+    // The class uses the CamelCased plugin name.
+    // It also extends the base plugin class located
+    // at `traq/libraries/plugin.php`
+    class MyPlugin extends \traq\libraries\Plugin
+    {
+    }
+
+Now we need to set our plugins information, such as name, version and author, and the initialization function:
+
+    namespace traq\plugins;
+    class MyPlugin extends \traq\libraries\Plugin
+    {
+        protected static $info = array(
+            'name'    => "My Plugin Name",
+            'version' => "1.0',
+            'author'  => "My Name Here"
+        );
+
+        public static function init()
+        {
+        }
+    }
+
+You should now be able to see the plugin listed on the plugins page, and can be enabled/installed, though it won't do anything, yet.
+
+### Our first hook
+
+Let's hook into the `format_text` function, which formats all text output to the user, such as ticket descriptions, ticket comments, wiki pages, as so on.
+
+    // FishHook is the library used to add and execute plugin hooks.
+    use \FishHook;
+
+    class MyPlugin extends \traq\libraries\Plugin
+    {
+        ....
+
+        public static function init()
+        {
+            // This adds the hook for the `format_text` function,
+            // The second parameter is an array, pass the class name _with_ namespace and method,
+            // this is easiest done by using `get_called_class()`.
+            FishHook::add('function:format_text', array(get_called_class(), 'format_text'));
+        }
+
+        // The plugin hook sends the text from the `format_text`
+        // function, and because we want to manipulate the text
+        // we need to add the ampersand before the argument.
+        // This passes $text as a reference.
+        public static function format_text(&$text)
+        {
+            // Let's replace all occurrences of `lol` with `haha`.
+            $text = str_replace('lol', 'haha', $text);
+
+            // We don't need to return anything because $text
+            // was passed as a reference to the original $text
+        }
+    }
