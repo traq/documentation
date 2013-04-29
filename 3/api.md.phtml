@@ -1,0 +1,42 @@
+## API
+
+All data returned by the API is in JSON format. There is _no_ plan to add XML.
+
+### Access Tokens
+
+Reading public data from Traq doesn't require an API token, however restricted
+data does.
+
+API tokens are per-user. Users can get their API token by going to the UserCP.
+
+When fetching restricted data from the API, supply the API token in either a
+request header `Access-token` or a `POST` parameter called `access_token`.
+
+### Fetching Data
+
+To fetch data from the API, simply append `.json` to the end of the URL.
+
+For example, if we want to fetch a list of projects, the URL would be:
+
+    http://path.to/traq/projects.json
+
+However, if you're trying to access restricted data, such as a private project
+or data from the AdminCP or Project Settings pages, you will need to provide an
+API access token.
+
+### Writing Data
+
+_Writing data via the API requires an API token._
+
+Writing data the API is done via `POST` with the data being sent as `POST` data.
+
+Here's an example using `curl`:
+
+    curl http://path.to/traq/my_projects/tickets/new -d access_token=3c3f1af318fa8c78b7caef59ac016c90cc8179b8 \
+      -d summary="Ticket summary" -d description="Ticket description"
+
+The API will then return a JSON response containing, `status`, `version`, and `ticket`.
+
+The `status` value on success is `1`, and `0` on failure. The `version` value is the API version.
+
+The created ticket is in `ticket`.
