@@ -1,0 +1,106 @@
+## Localisation
+
+Traq ships with the English language as default. Alternative languages can be found in the [languages forum](http://forum.traq.io/forumdisplay.php?fid=35).
+
+The files linked there need to be downloaded and added to the `vendor/traq/locale` directory.
+
+### Language file
+
+The language file is where all translation strings are stored. Let's create one now.
+
+Create a file named `enAU.php` in the `vendor/traq/locale` directory, and place the code below into it:
+
+    class enAU extends \traq\libraries\Locale
+    {
+        protected static $info = array(
+            'name'   => "English (Australian)",
+            'author' => "Your name here",
+
+            // Language info
+            'language'       => "English",
+            'language_short' => "en",
+            'locale'         => "AU"
+        );
+    }
+
+#### Strings
+
+So far, we have our translation class and it's info, let's insert some strings.
+
+    class enAU extends \traq\libraries\Locale
+    {
+        protected function strings()
+        {
+            return array(
+                // Regular strings
+                'there_are_x_posts' => "There are {1} posts",
+
+                // "Categorized" strings
+                'my.string' => "My string",
+                'my.other_string' => "My other string"
+            );
+        }
+    }
+
+By looking at the code above, we can have uncategorised and categorized strings.
+
+#### "Placeholders"
+
+You may have noticed, in the code above, that we have There are {1} posts, what's the deal with the {1}?
+
+It's a "placeholder", it get replaced during string compilation with whatever is passed when translating the string. Here's an example:
+
+    $lang->translate('there_are_x_posts', 1); // => "There are 1 posts"
+
+#### Plurals
+
+Going off the result from the example above, it doesn't make much sense, 1 posts, so how do we do this?
+
+Do we have two translations, `x_post` and `x_posts`? No, that would be insane.
+
+Instead we have this:
+
+    public function strings()
+    {
+        return array(
+            'there_are_x_posts' => "There {plural:{1}, {is {1} post|are {1} posts}}"
+        );
+    }
+
+What we have here is the plural system, let's explain how it works.
+
+If we want to insert a singular or plural, we use `{plural:x, {replacements}}`.
+
+Where `x` is, is the number to check against, which is usually placed in by using the placeholders, so if our number is the second variable passed to the translate function, then its `plural:{2}`.
+
+Where replacements is, is where we put our replacements, which, for this example, is `{1} post` and are `{1} posts`, replacements go inside the `{}` (curly brackets) and are separated by the line character `|`, like so: `{is {1} post|are {1} posts}`.
+
+Here is the complete example again:
+
+    'there_are_x_posts' => "There {plural:{1}, {is {1} post|are {1} posts}}"
+
+    $lang->translate('there_are_x_posts', 1); // There is 1 post
+    $lang->translate('there_are_x_posts', 5); // There are 5 posts
+
+#### Overriding functions
+
+While this whole thing is pretty cool and works well for English, but what if we need an extra plural form or two?
+
+We can override the numeral calculator:
+
+    class enAU extends \traq\libraries\Locale
+    {
+        public function calculate_numeral($numeral)
+        {
+            // Calculate and return numeral value to use, starting from 0.
+        }
+    }
+
+This can also be done with the following functions: `translate`, `date`, `get_string`, `compile_string`.
+
+### Activating the newly added language file
+
+To activate the language you just added there are 2 possibilities:
+
+- Choose that language in AdminCP as default for every user
+- Choose that language in UserCP only for your user
