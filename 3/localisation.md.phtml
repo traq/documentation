@@ -1,14 +1,14 @@
-## Localisation
+Localisation
+------------
 
-Traq ships with the English language as default. Alternative languages can be found in the [languages forum](http://forum.traq.io/forumdisplay.php?fid=35).
+Traq ships with the English language as the default language. Alternative languages can be found
+in the [languages forum](http://forum.traq.io/forum/33-languages/).
 
-The files linked there need to be downloaded and added to the `vendor/traq/locale` directory.
+The files linked there need to be downloaded and placed in the `vendor/traq/locale` directory.
 
 ### Language file
 
-The language file is where all translation strings are stored. Let's create one now.
-
-Create a file named `enAU.php` in the `vendor/traq/locale` directory, and place the code below into it:
+A language file is a PHP class that contains the language info and translation strings:
 
     class enAU extends \traq\libraries\Locale
     {
@@ -21,72 +21,67 @@ Create a file named `enAU.php` in the `vendor/traq/locale` directory, and place 
             'language_short' => "en",
             'locale'         => "AU"
         );
-    }
 
-#### Strings
-
-So far, we have our translation class and it's info, let's insert some strings.
-
-    class enAU extends \traq\libraries\Locale
-    {
         protected function strings()
         {
             return array(
-                // Regular strings
-                'there_are_x_posts' => "There are {1} posts",
-
-                // "Categorized" strings
-                'my.string' => "My string",
-                'my.other_string' => "My other string"
+                'my_string' => "My String"
             );
         }
     }
 
-By looking at the code above, we can have uncategorised and categorized strings.
+### Translation Strings
 
-#### "Placeholders"
+Translation strings are stored in an `key => value` array.
 
-You may have noticed, in the code above, that we have There are {1} posts, what's the deal with the {1}?
+Strings can be namespaced using dots, for example: `errors.invalid_password`.
 
-It's a "placeholder", it get replaced during string compilation with whatever is passed when translating the string. Here's an example:
+#### Variables / "Placeholders"
 
-    $lang->translate('there_are_x_posts', 1); // => "There are 1 posts"
+It is inevitable that translation strings will need to include something dynamic, such as ticket counts.
+This is where variables or "placeholders" come into play.
 
-#### Plurals
+Passing variables to the string is done by passing an array to the `translate` method like so:
 
-Going off the result from the example above, it doesn't make much sense, 1 posts, so how do we do this?
+    $lang->translate('there_are_x_posts', array(1)); // => "There are 1 posts"
 
-Do we have two translations, `x_post` and `x_posts`? No, that would be insane.
+The translation string for the above example is `There are {1} posts`, which uses the `n+1` format
+to include the variable. That is, the array index + 1. _This functionality will change in the future._
 
-Instead we have this:
+##### Named variables
 
-    public function strings()
-    {
-        return array(
-            'there_are_x_posts' => "There {plural:{1}, {is {1} post|are {1} posts}}"
-        );
-    }
+It is also possible to used a `key => value` array for named variables, like so:
 
-What we have here is the plural system, let's explain how it works.
+    // "Welcome {username}, you have {notifications} notifications"
+    $lang->translate(
+        'welcome_x_you_have_x_notifications',
+        array(
+            'username'      => "Picard",
+            'notifications' => 5
+        )
+    );
 
-If we want to insert a singular or plural, we use `{plural:x, {replacements}}`.
+##### Plurals
 
-Where `x` is, is the number to check against, which is usually placed in by using the placeholders, so if our number is the second variable passed to the translate function, then its `plural:{2}`.
+Lets say we have a translation string that needs to be pluralised, such as the ticket count. We can do this
+with the plural syntax.
 
-Where replacements is, is where we put our replacements, which, for this example, is `{1} post` and are `{1} posts`, replacements go inside the `{}` (curly brackets) and are separated by the line character `|`, like so: `{is {1} post|are {1} posts}`.
+The syntax for plurals looks like `{plural:{variable_name}, {singular|plural}}`, here's an example:
 
-Here is the complete example again:
+    // "There {plural:{1}, {is {1} ticket|are {1} tickets}}"
+    $lang->translate("there_are_x_tickets", array(5));
 
-    'there_are_x_posts' => "There {plural:{1}, {is {1} post|are {1} posts}}"
+The plural syntax is pretty simple once you understand it, the `plural:{variable_name}` part is what determines
+if the singular or plural form should be used.
 
-    $lang->translate('there_are_x_posts', 1); // There is 1 post
-    $lang->translate('there_are_x_posts', 5); // There are 5 posts
+The `{singular|plural}` part can be considered as an array of plural forms, languages with multiple plural forms
+can add more options simply by separating them with the pipe: `|`. See the `calculate_enumeral` class method.
 
 #### Overriding functions
 
-While this whole thing is pretty cool and works well for English, but what if we need an extra plural form or two?
+For languages that have multiple plural forms will need to override the `caluclate_enumral` class method.
 
-We can override the numeral calculator:
+This can be done simply be redeclaring it in the language class like so:
 
     class enAU extends \traq\libraries\Locale
     {
@@ -96,11 +91,11 @@ We can override the numeral calculator:
         }
     }
 
-This can also be done with the following functions: `translate`, `date`, `get_string`, `compile_string`.
+This can also be done with the `translate`, `date`, `get_string`, `compile_string` methods.
 
 ### Activating the newly added language file
 
-To activate the language you just added there are 2 possibilities:
+Activating a language can be done in one of two places,
 
-- Choose that language in AdminCP as default for every user
-- Choose that language in UserCP only for your user
+- The AdminCP to use the language for every user
+- The UserCP for the currently logged in user
