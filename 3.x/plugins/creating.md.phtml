@@ -1,16 +1,22 @@
 ---
-title: 3.x / Plugins / Creating a Plugin
+title: Creating a Plugin
+crumbs:
+  - "3.x"
+  -
+    - "3.x/plugins"
+    - Plugins
 ---
 
-## Creating a Plugin
+## Plugin file setup
 
-### Plugin file setup
+Lets make our first plugin, we'll call it "MyPlugin". Because of the framework Traq 3.0 uses, all classes and namespaces
+are converted to underscore format for directory and filenames, we'll create a directory in `vendor/traq/plugins` called `my_plugin`.
 
-Let's make our first plugin, we'll call it "MyPlugin". Because the framework Traq 3.0 uses, all classes and namespaces are converted to underscore format for directory and filenames, so create a directory in `vendor/traq/plugins` called `my_plugin`.
+Now we need to make the main plugin file that tells Traq what to do when the plugin is enabled. Inside our plugins directory
+(`my_plugin`) create a file called `my_plugin.php`.
 
-Now we need to make the main plugin file that tells Traq what to do when the plugin is enabled. Inside our plugins directory (`my_plugin`) create a file called `my_plugin.php` and open it in your preferred text editor.
-
-Firstly, we need to setup the namespace and class. The namespace is similar to the directory path of the plugin inside the `vendor` directory with the CamelCased plugin name (`MyPlugin`), better explained with the following example:
+Firstly, we need to setup the namespace and class. The namespace is similar to the directory path of the plugin inside the
+`vendor` directory with the CamelCased plugin name (`MyPlugin`), better explained with the following example:
 
     // Our file is located in `vendor/traq/plugins`
     namespace traq\plugins;
@@ -22,7 +28,7 @@ Firstly, we need to setup the namespace and class. The namespace is similar to t
     {
     }
 
-Now we need to set our plugins information, such as name, version and author, and the initialization function:
+Now we need to set our plugins information, such as name, version, author and the initialisation function:
 
     namespace traq\plugins;
     class MyPlugin extends \traq\libraries\Plugin
@@ -38,11 +44,12 @@ Now we need to set our plugins information, such as name, version and author, an
         }
     }
 
-You should now be able to see the plugin listed on the plugins page, and can be enabled/installed, though it won't do anything, yet.
+You should now be able to see the plugin listed on the plugins page and enable it.
 
-### Our first hook
+## Our first hook
 
-Let's hook into the `format_text` function, which formats all text output to the user, such as ticket descriptions, ticket comments, wiki pages, as so on.
+Let's hook into the `format_text` function, which formats all text output to the user, such as ticket descriptions, ticket
+comments, wiki pages, as so on.
 
     // FishHook is the library used to add and execute plugin hooks.
     use \FishHook;

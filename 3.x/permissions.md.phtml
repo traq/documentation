@@ -1,8 +1,8 @@
 ---
-title: 3.x / Permissions
+title: Permissions
+crumbs:
+  - "3.x"
 ---
-
-## Permissions
 
 Traq features a flexible, easy to use, per-project permission system.
 
@@ -14,7 +14,6 @@ There are two sets of permissions in Traq, one for user groups and another for p
 
 Group permissions are pretty self explanatory, they allow or disallow what a group of users can do.
 
-
 #### Roles
 
 Role permissions are for members of a project, such as managers, developers and testers.
@@ -23,8 +22,8 @@ Role permissions are for members of a project, such as managers, developers and 
 
 Permissions work in a specific way. Role permissions take priority over group permissions.
 
-What this means is, if a user is in the regular users group, but are a manager of a project,
-the manager role permissions will allow them to do what the regular group permissions will not.
+For example, let's say a user belongs to the group `Employee` and the role `Developer` and the `Employee` group cannot
+create tickets but the `Developer` role can.
 
 There is, however, one group that cannot be limited, the Admin group. The system is designed
 to allow Admins to do everything.
