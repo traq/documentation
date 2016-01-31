@@ -1,0 +1,23 @@
+---
+title: Major Changes
+crumbs:
+  - "4.0"
+---
+
+Traq 4.0 is a complete rewrite from Traq 3.x, the major changes are:
+
+- **PHP 5.5 is required**
+
+    _Traq 4.0 might run on 5.4, but it is not supported._
+
+- **New framework: Avalon 2.0**
+- **PostgreSQL support**
+
+    Avalon 2.0 uses the [Doctrine DBAL][1] which supports more database systems such as PostgreSQL.
+
+- **BCrypt passwords required**
+
+    Anyone logging into a Traq 4.0 installation that was upgraded from Traq 3.x will be required to change their password
+    if they are still using a `sha1` hashed password.
+
+[1]: http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/

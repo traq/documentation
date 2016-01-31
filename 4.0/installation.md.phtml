@@ -1,0 +1,39 @@
+---
+title: Install and Upgrade
+crumbs:
+  - "4.0"
+---
+
+## Installation
+
+Installing Traq 4.0 is the same as previous versions.
+
+You will need to setup a database for Traq to use before the installation.
+
+1. Download Traq 4.0 and extract the archive.
+2. Upload the contents of the `upload` directory to your server.
+3. Open the URL to [Traq](https://traq.io) in your browser.
+4. Follow the installation steps.
+5. Rename `htaccess.txt` to `.htaccess` in the root directory of [Traq](https://traq.io).
+
+### From the repository
+
+Installing Traq 4.0 from the repository is trickier than previous versions. You will need [Composer][1], [Node][2],
+[NPM][3] and [Gulp][4].
+
+1. Clone the repository: `git clone https://github.com/nirix/traq`
+2. Install dependencies: `composer install`
+3. Setup `dev` directory: `cd dev && npm install`
+4. Compile assets: `gulp compile`
+
+This change was made to keep the repository clean and remove 3rd party code. There are plans to setup a repository to contain
+the "compiled" Traq 4.0.
+
+## Upgrade
+
+_Not yet relevant._
+
+[1]: https://getcomposer.org
+[2]: https://nodejs.org
+[3]: https://www.npmjs.com/
+[4]: http://gulpjs.com/
