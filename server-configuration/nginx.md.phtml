@@ -1,0 +1,22 @@
+---
+title: Nginx
+crumbs:
+  - "Server Configuration"
+---
+
+To run Traq on Nginx you will need to configure your server to use Traq's `index.php`
+as one of the URL's to try, which means you will need access to your virtual host
+configuration file.
+
+You, or your host, will need to place the below configuration, or a similar one,
+inside the `server` block of your configuration file.
+
+    location / {
+        try_files $uri $uri/ @rewrite;
+    }
+
+    location @rewrite {
+        rewrite ^(.*)$ /index.php;
+    }
+
+**Note:** This configuration assumes Traq is setup in the root of a subdomain.
