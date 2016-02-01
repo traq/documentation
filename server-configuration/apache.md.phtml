@@ -4,22 +4,21 @@ crumbs:
   - "Server Configuration"
 ---
 
-## Apache Configuration
-
 To run Traq on Apache you will need the `mod_rewrite` module.
 
-### Rewrite rules
+## Rewrite rules
 
-Due to different servers being setup differently the default rewrite rules may not work correctly for everyone.
+Some servers are setup differently and require different rewrite rules. The ones listed on this page have had the most
+success on varying setups.
 
-#### Default rewrite rules
+### Default rewrite rules
 
     RewriteEngine On
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^(.*)$ index.php/$1 [L]
 
-#### Alternate rewrite rules
+### Alternate rewrite rules
 
     RewriteEngine On
     RewriteCond %{REQUEST_FILENAME} !-d
